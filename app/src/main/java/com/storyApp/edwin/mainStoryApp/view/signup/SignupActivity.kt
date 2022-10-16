@@ -15,6 +15,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.storyApp.edwin.mainStoryApp.data.StoryRepository
 import com.storyApp.edwin.mainStoryApp.databinding.ActivitySignupBinding
 import com.storyApp.edwin.mainStoryApp.model.UserModel
 import com.storyApp.edwin.mainStoryApp.model.UserPreference
@@ -32,6 +33,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
     private lateinit var signupViewModel: SignupViewModel
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,10 +60,11 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        signupViewModel = ViewModelProvider(
-            this,
-            ViewModelFactory(UserPreference.getInstance(dataStore))
-        )[SignupViewModel::class.java]
+        signupViewModel.getUser().observe(this) {user ->
+            token = user.token
+        }
+        signupViewModel = ViewModelProvider(this, ViewModelFactory(
+            UserPreference.getInstance(dataStore), token))[SignupViewModel::class.java]
     }
 
     private fun setupAction() {

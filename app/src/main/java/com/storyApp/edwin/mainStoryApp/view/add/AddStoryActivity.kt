@@ -21,6 +21,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.storyApp.edwin.mainStoryApp.data.StoryRepository
 import com.storyApp.edwin.mainStoryApp.databinding.ActivityAddstoryBinding
 import com.storyApp.edwin.mainStoryApp.model.UserPreference
 import com.storyApp.edwin.mainStoryApp.model.response.AddandRegisterResponse
@@ -44,6 +45,7 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddstoryBinding
     private lateinit var currentPhotoPath: String
     private var getFile: File? = null
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,7 +79,8 @@ class AddStoryActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        addStoryViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[AddStoryViewModel::class.java]
+        addStoryViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore), token))[AddStoryViewModel::class.java]
+        addStoryViewModel.getUser().observe(this, { user ->  token = user.token })
         binding.apply {
 
         }

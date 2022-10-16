@@ -16,11 +16,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainViewModel(private val pref: UserPreference) : ViewModel() {
+class MainViewModel(private val pref: UserPreference, storyRepository: StoryRepository) : ViewModel() {
 
     private val _listStory = MutableLiveData<ArrayList<ListStory>>()
     val listStory: LiveData<ArrayList<ListStory>> = _listStory
-    private lateinit var storyRepository : StoryRepository
+    val story: LiveData<PagingData<StoryResponseItem>> = storyRepository.getStory().cachedIn(viewModelScope)
 
     fun getUser(): LiveData<UserModel> {
         return pref.getUser().asLiveData()
@@ -31,9 +31,6 @@ class MainViewModel(private val pref: UserPreference) : ViewModel() {
             pref.logout()
         }
     }
-
-    val story: LiveData<PagingData<StoryResponseItem>> =
-        storyRepository.getStory().cachedIn(viewModelScope)
 
     fun getAllStory(token: String) {
         val client = RetrofitClient.create(token).getAllStories()

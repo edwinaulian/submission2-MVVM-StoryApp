@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.storyApp.edwin.mainStoryApp.R
+import com.storyApp.edwin.mainStoryApp.data.StoryRepository
 import com.storyApp.edwin.mainStoryApp.databinding.ActivityMainBinding
 import com.storyApp.edwin.mainStoryApp.model.UserModel
 import com.storyApp.edwin.mainStoryApp.model.UserPreference
@@ -58,11 +59,15 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        mainViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[MainViewModel::class.java]
+        mainViewModel = ViewModelProvider(this, ViewModelFactory(
+            UserPreference.getInstance(dataStore), token))[MainViewModel::class.java]
+
         mainViewModel.getUser().observe(this) { user ->
             if (user.isLogin) {
                 getAllStory(user.token)
                 token = user.token
+                val bundle = Bundle()
+                bundle.putString("token", token)
                 setUpMenu(user)
             } else {
                 startActivity(Intent(this, WelcomeActivity::class.java))

@@ -22,6 +22,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.storyApp.edwin.mainStoryApp.data.StoryRepository
 import com.storyApp.edwin.mainStoryApp.databinding.ActivityLoginBinding
 import com.storyApp.edwin.mainStoryApp.model.LoginResponse
 import com.storyApp.edwin.mainStoryApp.model.UserModel
@@ -42,6 +43,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var user: UserModel
     private lateinit var myButton: Button
     private lateinit var myEditText: EditText
+    private var token: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,9 +88,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun setupViewModel() {
-        loginViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore)))[LoginViewModel::class.java]
+        loginViewModel = ViewModelProvider(this, ViewModelFactory(UserPreference.getInstance(dataStore), token))[LoginViewModel::class.java]
         loginViewModel.getUser().observe(this, { user ->
             this.user = user
+            token = user.token
         })
     }
 

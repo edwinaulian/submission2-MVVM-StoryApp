@@ -28,7 +28,7 @@ class StoryListFragment(newList: PagingData<StoryResponseItem>, user: UserModel)
 
     private fun setUpData() {
         binding.apply {
-//            nameUserLogin.text = getString(R.string.greeting, _user.name)
+//          nameUserLogin.text = getString(R.string.greeting, _user.name)
             rvStory.setHasFixedSize(true)
             rvStory.layoutManager = LinearLayoutManager(context)
             rvStory.adapter = MainAdapter()
